@@ -14,27 +14,20 @@ function lib.newUUID(seed)
 	end);
 end
 
-function lib.typeof(arg: any): string
+function lib.typeof(arg)
 	local mt = getmetatable(arg)
 
 	if mt and mt.__type then
-		if arg['GetSerial'] and hiddenValues.SerialKeys[arg.GetSerial()] then
-			return arg.__type;
-		end
 		return mt.__type
 	end
 	return typeof(arg)
 end
 
-function lib.require_once(path, remove = false)
-  if remove then table.remove(hiddenValues.SerialKeys, path) end;
+function lib.require_once(path)
+	if not path then error('Path is required!') end;
 	if hiddenValues.SerialKeys[path] then return end;
-  hiddenValues.SerialKeys[path] = true;
-	return game:HttpGet(path);
+	hiddenValues.SerialKeys[path] = true;
+	return loadstring(game:HttpGet(path))();
 end
 
---Instances
-
-
-
-return lib
+return lib;
