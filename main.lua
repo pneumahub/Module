@@ -5,7 +5,7 @@ local lib = {}
 
 --functions
 function lib.newUUID(seed)
-	math.randomseed(seed or os.time());
+	math.randomseed(seed or tick());
 	local random = math.random
 	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 	return string.gsub(template, '[xy]', function (c)
