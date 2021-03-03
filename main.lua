@@ -4,7 +4,7 @@ hiddenValues.SerialKeys = {};
 local lib = {}
 
 --functions
-function lib.newUUID(seed)
+function lib.newUUID()
 	return game:GetService("HttpService"):GenerateGUID(false);
 end
 
