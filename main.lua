@@ -5,7 +5,7 @@ local lib = {}
 
 --functions
 function lib.newUUID(seed)
-	return game:GetService("HttpService"):GenerateGUID(false);
+	return game:GetService("HttpService"):GenerateGUID();
 end
 
 function lib.typeof(arg)
