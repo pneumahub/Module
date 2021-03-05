@@ -1,7 +1,5 @@
--- Gui to Lua
--- Version: 3.2
-
--- Instances:
+--Debugging Tools
+-- Version: pre-1a
 
 local CynicalUI = Instance.new("ScreenGui")
 local Dev = Instance.new("Folder")
@@ -21,6 +19,7 @@ local Content_2 = Instance.new("ScrollingFrame")
 local UIListLayout_2 = Instance.new("UIListLayout")
 local Result = Instance.new("ImageLabel")
 local Display = Instance.new("ImageLabel")
+local Divider = Instance.new("Frame")
 local Controls = Instance.new("Frame")
 local Peek = Instance.new("TextButton")
 local Delete = Instance.new("TextButton")
@@ -35,7 +34,6 @@ local UIListLayout_4 = Instance.new("UIListLayout")
 local Option = Instance.new("TextButton")
 local ToolTip = Instance.new("TextLabel")
 
---Properties:
 
 CynicalUI.Name = "CynicalUI"
 CynicalUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -190,9 +188,9 @@ Content_2.BackgroundTransparency = 1.000
 Content_2.BorderSizePixel = 0
 Content_2.Position = UDim2.new(0, 8, 0, 28)
 Content_2.Size = UDim2.new(1, -8, 1, -28)
-Content_2.HorizontalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+Content_2.HorizontalScrollBarInset = Enum.ScrollBarInset.Always
 Content_2.ScrollBarThickness = 8
-Content_2.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+Content_2.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 
 UIListLayout_2.Parent = Content_2
 UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
@@ -204,12 +202,11 @@ Result.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Result.BackgroundTransparency = 1.000
 Result.Size = UDim2.new(1, 0, 0, 24)
 Result.Image = "rbxassetid://3570695787"
-Result.ImageColor3 = Color3.fromRGB(65, 65, 65)
+Result.ImageColor3 = Color3.fromRGB(44, 44, 52)
 Result.ScaleType = Enum.ScaleType.Slice
 Result.SliceCenter = Rect.new(100, 100, 100, 100)
 Result.SliceScale = 0.130
 Result.Visible = false
-Result.ClipsDescendants = true
 
 Display.Name = "Display"
 Display.Parent = Result
@@ -224,6 +221,11 @@ Display.ImageColor3 = Color3.fromRGB(65, 65, 65)
 Display.ScaleType = Enum.ScaleType.Slice
 Display.SliceCenter = Rect.new(100, 100, 100, 100)
 Display.SliceScale = 0.100
+
+Divider.Name = "BorderBottom"
+Divider.BackgroundColor3 = Color3.fromRGB(44, 44, 52)
+Divider.Size = UDim2.new(1,0,0,0)
+Divider.BorderSizePixel = 0
 
 Controls.Name = "Controls"
 Controls.Parent = Display
@@ -286,8 +288,9 @@ Value.TextSize = 14.000
 Content_3.Name = "Content"
 Content_3.Parent = Result
 Content_3.BackgroundTransparency = 1.000
-Content_3.Position = UDim2.new(0, 0, 0, 29)
-Content_3.Size = UDim2.new(1, 0, 1, -29)
+Content_3.Position = UDim2.new(0, 0, 0, 39)
+Content_3.Size = UDim2.new(1, 0, 1, -39)
+Content_3.ClipsDescendants = true
 
 UIListLayout_3.Parent = Content_3
 UIListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
@@ -417,6 +420,32 @@ label.InputEnded:Connect(function(input)
 end)
 local currentIndex = "getgenv";
 local functions = {
+	tablereg = {
+		Description = "Gets the table(s) in the registry",
+		Function = function() 
+			local returning = {}
+			local reg = debug.getregistry();
+			for i, v in pairs(reg) do
+				if typeof(v) == "table" then
+					returning[i] = v;
+				end
+			end
+			return returning;
+		end;
+	};
+	functionreg = {
+		Description = "Gets the function(s) in the registry \n[WARNING: There are alot of these in the registry, beware of lag / high memory usage]",
+		Function = function() 
+			local returning = {}
+			local reg = debug.getregistry();
+			for i, v in pairs(reg) do
+				if typeof(v) == "function" then
+					returning[i] = v;
+				end
+			end
+			return returning;
+		end;
+	};
 	getgenv = {
 		Description = "Gets the Exploits environment",
 		Function = getgenv;
@@ -485,6 +514,54 @@ Input:GetPropertyChangedSignal("CursorPosition"):Connect(showSelection);
 Input:GetPropertyChangedSignal("SelectionStart"):Connect(showSelection);
 Input:GetPropertyChangedSignal("Text"):Connect(showSelection);
 
+local function extractData(obj, verifying)
+	if typeof(obj) == "Instance" then
+		if obj.ClassName == "Script" then
+			if verifying then return true end;
+			warn('It is not yet known if this feature is supported! May error');
+		end
+		if obj.ClassName == "ModuleScript" then
+			if verifying then return true end;
+			local returning = nil;
+			pcall(function() returning = getmenv(obj) end)
+			returning = returning or require(obj);
+			return getmenv(obj);
+		end
+		if obj.ClassName == "LocalScript" then
+			if verifying then return true end;
+			return getsenv(obj);
+		end
+	else
+		if typeof(obj) == "table" then
+			if verifying then return true end;
+			return obj;
+		end
+		if typeof(obj) == "Enums" then
+			if verifying then return true end;
+			return obj:GetEnums();
+		end
+		if typeof(obj) == "Enum" then
+			if verifying then return true end;
+			local returning = obj:GetEnumItems();
+			for i, v in pairs(returning) do
+				local finding = string.split(tostring(v), ".")
+				returning[i] = finding[#finding]
+			end
+			return returning;
+		end
+	end
+	return false;
+end
+
+local function realTableSize(tble)
+	if typeof(tble) ~= "table" then return 0 end;
+	local amount = 0;
+	for _, _ in pairs(tble) do
+		amount += 1;
+	end
+	return amount
+end
+
 local function createResults(object, tble)
 	for _, v in pairs(object:GetChildren()) do
 		if v.ClassName ~= "UIListLayout" and v.Name ~= "PlaceholderResult" then
@@ -492,55 +569,57 @@ local function createResults(object, tble)
 		end
 	end
 	for i, v in pairs(tble) do
+		local Type = typeof(v);
+		local function reload()
+			if typeof(v) == "Instance" then
+				Type = v.ClassName;
+			end
+			if Type == "Script" or Type == "ModuleScript" then
+				tble = functions[currentIndex]['Function'](v);
+			elseif Type == "table" then
+				tble = v;
+			elseif Type == "Enums" then
+				tble = v:GetEnums();
+			elseif Type == "Enum" then
+				tble = v:GetEnumItems();
+			else
+				tble = {}
+			end
+		end
 		local temp = Result:Clone();
 		temp.Parent = object;
 		temp.Name = tostring(i);
 		temp.Display.Label.Text = " "..tostring(i);
 		temp.Display.Value.Text = " "..tostring(v);
-		
 		temp.Display.Label.MouseEnter:Connect(function()
-			if typeof(v) == "Instance" then
-				tooltip.Text = "Type: ".. v.ClassName
-				tooltip.Visible = true
-			else
-				tooltip.Text = "Type: "..typeof(v)
-				tooltip.Visible = true
-			end
+			tooltip.Text = "Type: ".. Type
+			tooltip.Visible = true
 		end)
 		
 		temp.Display.Label.MouseLeave:Connect(function()
 			tooltip.Visible = false;
 		end)
-		local Type = typeof(v);
-		if typeof(v) == "Instance" then
-			Type = v.ClassName;
-		end
+		reload()
 		temp.Display.Controls.Peek.MouseEnter:Connect(function()
-			if Type == "Script" or Type == "ModuleScript" then
-				tble = functions[currentIndex]['Function'](v);
-			elseif Type == "table" then
-				tble = v;
-			end
-			local amount = 0;
-			for _, _ in pairs(tble) do
-				amount += 1;
-			end
-			tooltip.Text = Type..": "..amount.." results.";
+			reload();
+			tooltip.Text = realTableSize(tble).." results";
 			tooltip.Visible = true;
 		end)
 		temp.Display.Controls.Peek.MouseLeave:Connect(function()
 			tooltip.Visible = false;
 		end)
-		if not(Type == "Script" or Type == "ModuleScript" or Type == "table" or Type == "LocalScript") then
+		if not(extractData(v)) then
 			temp.Display.Controls.Peek:Destroy();
-			temp.Display.Controls.Size = UDim2.new(0.15,0,1,0);
-			temp.Display.Controls.Delete.Size = UDim2.new(1,0,1,0);
-			temp.Display.Value.Size = UDim2.new(0.55, 0, 1, 0);
 		else
 			local connection = nil;
 			temp['Display']['Controls']['Peek'].MouseButton1Click:Connect(function()
+				if realTableSize(tble) < 1 then return end;
 				if temp.Size.Y.Offset > 24 then
+					if not connection then return end;
+					temp.Display:TweenSize(UDim2.new(1,0,0,24), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
 					temp:TweenSize(UDim2.new(1,0,0,24), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true, function()
+						temp.Display.Controls.Peek.Text = "+"
+						temp.Display.ImageColor3 = Color3.fromRGB(65, 65, 65);
 						for _, v in pairs(temp['Content']:GetChildren()) do
 							if v.ClassName ~= "UIListLayout" and v.Name ~= "PlaceholderResult" then
 								v:Destroy();
@@ -550,14 +629,13 @@ local function createResults(object, tble)
 						connection = nil;
 					end)
 				else
+					temp.Display.Controls.Peek.Text = "-"
+					temp.Display:TweenSize(UDim2.new(1,0,0,34), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+					temp.Display.ImageColor3 = Color3.fromRGB(80, 80, 80)
 					connection = temp['Content']['UIListLayout']:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-						temp:TweenSize(UDim2.new(1,0,0,29 + temp['Content']['UIListLayout'].AbsoluteContentSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+						temp:TweenSize(UDim2.new(1,0,0,39 + temp['Content']['UIListLayout'].AbsoluteContentSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
 					end)
-					if Type == "Script" or Type == "ModuleScript" or Type == "LocalScript" then
-						tble = functions[currentIndex]['Function'](v);
-					elseif Type == "table" then
-						tble = v;
-					end
+					tble = extractData(v);
 					createResults(temp['Content'], tble);
 				end
 			end)
@@ -567,6 +645,8 @@ local function createResults(object, tble)
 		end)
 		temp.Visible = true;
 	end
+	Divider:Clone().Parent = object
+
 end
 
 local currentobj = nil;
@@ -657,9 +737,10 @@ Input.FocusLost:Connect(function(enterPressed)
 		SearchBox:TweenSizeAndPosition(UDim2.new(0, 0, 0, 20), UDim2.new(0, 0, 0, -5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true, function() SearchBox.Visible = false end);
 		
 		local tble = {};
-		if currentIndex == "getrenv" or currentIndex == "getgenv" then
+		if currentIndex == "getrenv" or currentIndex == "getgenv" or currentIndex == "tablereg" or currentIndex == "instancereg" then
 			tble = functions[currentIndex]['Function']();
 		else
+			print(currentIndex, currentobj);
 			if not currentobj then return end
 			tble = functions[currentIndex]['Function'](currentobj);
 		end
@@ -731,7 +812,7 @@ for i, v in pairs(functions) do
 		currentIndex = temp.Name;
 		label.Text = "Environment Peeker <font size='10'>".. currentIndex .."</font>"
 		local tble = {};
-		if currentIndex == "getrenv" or currentIndex == "getgenv" then
+		if currentIndex == "getrenv" or currentIndex == "getgenv" or currentIndex == "tablereg" then
 			tble = functions[currentIndex]['Function']();
 		else
 			if not currentobj then return end
