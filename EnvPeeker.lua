@@ -531,7 +531,7 @@ local function createResults(object, tble)
 		temp.Display.Controls.Peek.MouseLeave:Connect(function()
 			tooltip.Visible = false;
 		end)
-		if not(Type == "Script" or Type == "ModuleScript" or Type == "table") then
+		if not(Type == "Script" or Type == "ModuleScript" or Type == "table" or Type == "LocalScript") then
 			temp.Display.Controls.Peek:Destroy();
 			temp.Display.Controls.Size = UDim2.new(0.15,0,1,0);
 			temp.Display.Controls.Delete.Size = UDim2.new(1,0,1,0);
@@ -553,7 +553,7 @@ local function createResults(object, tble)
 					connection = temp['Content']['UIListLayout']:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 						temp:TweenSize(UDim2.new(1,0,0,29 + temp['Content']['UIListLayout'].AbsoluteContentSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
 					end)
-					if Type == "Script" or Type == "ModuleScript" then
+					if Type == "Script" or Type == "ModuleScript" or Type == "LocalScript" then
 						tble = functions[currentIndex]['Function'](v);
 					elseif Type == "table" then
 						tble = v;
