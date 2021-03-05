@@ -95,8 +95,9 @@ Search.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Search.BackgroundTransparency = 1.000
 Search.Position = UDim2.new(1, -5, 0, 0)
 Search.Size = UDim2.new(1, 0, 1, 0)
+Search.Font = Enum.Font.ArialBold
 Search.SizeConstraint = Enum.SizeConstraint.RelativeYY
-Search.Text = "🔍"
+Search.Text = "O"
 Search.TextScaled = true
 Search.TextWrapped = true
 
@@ -158,7 +159,7 @@ Results.SliceScale = 0.080
 Content.Name = "Content"
 Content.Parent = Results
 Content.BackgroundColor3 = Color3.fromRGB(44, 44, 52)
-Content.CanvasSize = UDim2.new(1,0,1,0);
+Content.CanvasSize = UDim2.new(0,0,0,0);
 Content.BorderSizePixel = 0
 Content.Selectable = false
 Content.Size = UDim2.new(1, 0, 1, -8)
@@ -203,10 +204,12 @@ Result.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Result.BackgroundTransparency = 1.000
 Result.Size = UDim2.new(1, 0, 0, 24)
 Result.Image = "rbxassetid://3570695787"
+Result.ImageColor3 = Color3.fromRGB(65, 65, 65)
 Result.ScaleType = Enum.ScaleType.Slice
 Result.SliceCenter = Rect.new(100, 100, 100, 100)
 Result.SliceScale = 0.130
 Result.Visible = false
+Result.ClipsDescendants = true
 
 Display.Name = "Display"
 Display.Parent = Result
@@ -228,7 +231,7 @@ Controls.AnchorPoint = Vector2.new(1, 0)
 Controls.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Controls.BackgroundTransparency = 1.000
 Controls.Position = UDim2.new(1, 0, 0, 0)
-Controls.Size = UDim2.new(0.200000003, 0, 1, 0)
+Controls.Size = UDim2.new(0.15, 0, 1, 0)
 
 Peek.Name = "Peek"
 Peek.Parent = Controls
@@ -236,10 +239,10 @@ Peek.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Peek.BackgroundTransparency = 1.000
 Peek.Position = UDim2.new(0, 0, 0, 3)
 Peek.Size = UDim2.new(0.5, 0, 1, -5)
-Peek.Font = Enum.Font.Arial
-Peek.Text = "👁️"
-Peek.TextColor3 = Color3.fromRGB(172, 172, 203)
-Peek.TextSize = 14.000
+Peek.Font = Enum.Font.ArialBold
+Peek.Text = "+"
+Peek.TextColor3 = Color3.fromRGB(122, 203, 138)
+Peek.TextSize = 20.000
 
 Delete.Name = "Delete"
 Delete.Parent = Controls
@@ -248,18 +251,21 @@ Delete.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Delete.BackgroundTransparency = 1.000
 Delete.Position = UDim2.new(1, 0, 0, 3)
 Delete.Size = UDim2.new(0.5, 0, 1, -5)
-Delete.Font = Enum.Font.SourceSans
-Delete.Text = "❌"
-Delete.TextColor3 = Color3.fromRGB(255, 255, 255)
+Delete.Font = Enum.Font.ArialBold
+Delete.Text = "X"
+Delete.TextColor3 = Color3.fromRGB(152, 0, 2)
 Delete.TextSize = 14.000
 
 Label_2.Name = "Label"
 Label_2.Parent = Display
 Label_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Label_2.BackgroundTransparency = 1.000
-Label_2.Size = UDim2.new(0.400000006, 0, 1, 0)
+Label_2.Size = UDim2.new(0.3, 0, 1, 0)
 Label_2.Font = Enum.Font.Arial
 Label_2.Text = "Name"
+Label_2.TextXAlignment = Enum.TextXAlignment.Left
+Label_2.TextTruncate = Enum.TextTruncate.AtEnd
+Label_2.ClipsDescendants = true
 Label_2.TextColor3 = Color3.fromRGB(172, 172, 203)
 Label_2.TextSize = 14.000
 
@@ -267,22 +273,25 @@ Value.Name = "Value"
 Value.Parent = Display
 Value.BackgroundColor3 = Color3.fromRGB(103, 103, 103)
 Value.BorderSizePixel = 0
-Value.Position = UDim2.new(0.400000006, 0, 0, 0)
-Value.Size = UDim2.new(0.400000006, 0, 1, 0)
+Value.Position = UDim2.new(0.3, 0, 0, 0)
+Value.Size = UDim2.new(0.55, 0, 1, 0)
 Value.Font = Enum.Font.Arial
 Value.Text = "Value"
+Value.TextXAlignment = Enum.TextXAlignment.Left
+Value.TextTruncate = Enum.TextTruncate.AtEnd
+Value.ClipsDescendants = true
 Value.TextColor3 = Color3.fromRGB(172, 172, 203)
 Value.TextSize = 14.000
 
 Content_3.Name = "Content"
 Content_3.Parent = Result
-Content_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Content_3.BackgroundTransparency = 1.000
-Content_3.Position = UDim2.new(0, 0, 0, 24)
-Content_3.Size = UDim2.new(1, 0, 1, -24)
+Content_3.Position = UDim2.new(0, 0, 0, 29)
+Content_3.Size = UDim2.new(1, 0, 1, -29)
 
 UIListLayout_3.Parent = Content_3
 UIListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout_3.Padding = UDim.new(0, 5)
 
 Modes.Name = "Modes"
 Modes.Parent = EnvPeeker
@@ -427,34 +436,6 @@ local functions = {
 }
 local container = modes.Frame;
 
-for i, v in pairs(functions) do
-	local temp = container.Option:Clone();
-	temp.Parent = container;
-	temp.Text = i;
-	temp.Visible = true;
-	temp.Name = i;
-
-	temp.MouseButton1Click:Connect(function()
-		ToggleModes();
-		currentIndex = temp.Name;
-		label.Text = "Environment Peeker <font size='10'>".. currentIndex .."</font>"
-	end)
-	local rect = getRect(temp);
-	local wasInside = false;
-	mouse.Move:Connect(function()
-		if rect.IsInside(Vector2.new(mouse.X, mouse.Y)) then
-			if not modes.Visible or searchRect.IsInside(Vector2.new(mouse.X, mouse.Y)) then return end
-			wasInside = true;
-			tooltip.Text = functions[temp.Name]['Description'];
-			tooltip.Visible = true;
-		elseif wasInside then
-			tooltip.Visible = false;
-			wasInside = false;
-		end
-	end)
-end 
-
-
 local ts = game:GetService("TextService");
 local function tweenToIndex(text)
 	local selection = ts:GetTextSize(text, Input.TextSize, Input.Font, Vector2.new(99999999999999999999,Input.parent.AbsoluteSize));
@@ -513,13 +494,74 @@ local function createResults(object, tble)
 	for i, v in pairs(tble) do
 		local temp = Result:Clone();
 		temp.Parent = object;
-		temp.Name = i;
-		temp.Display.Label.Text = tostring(i);
-		temp.Display.Value.Text = tostring(v);
+		temp.Name = tostring(i);
+		temp.Display.Label.Text = " "..tostring(i);
+		temp.Display.Value.Text = " "..tostring(v);
 		
-		temp['Display']['Controls']['Peek'].MouseButton1Click:Connect(function()
-			createResults(temp['Content'], v);
+		temp.Display.Label.MouseEnter:Connect(function()
+			if typeof(v) == "Instance" then
+				tooltip.Text = "Type: ".. v.ClassName
+				tooltip.Visible = true
+			else
+				tooltip.Text = "Type: "..typeof(v)
+				tooltip.Visible = true
+			end
 		end)
+		
+		temp.Display.Label.MouseLeave:Connect(function()
+			tooltip.Visible = false;
+		end)
+		local Type = typeof(v);
+		if typeof(v) == "Instance" then
+			Type = v.ClassName;
+		end
+		temp.Display.Controls.Peek.MouseEnter:Connect(function()
+			if Type == "Script" or Type == "ModuleScript" then
+				tble = functions[currentIndex]['Function'](v);
+			elseif Type == "table" then
+				tble = v;
+			end
+			local amount = 0;
+			for _, _ in pairs(tble) do
+				amount += 1;
+			end
+			tooltip.Text = Type..": "..amount.." results.";
+			tooltip.Visible = true;
+		end)
+		temp.Display.Controls.Peek.MouseLeave:Connect(function()
+			tooltip.Visible = false;
+		end)
+		if not(Type == "Script" or Type == "ModuleScript" or Type == "table") then
+			temp.Display.Controls.Peek:Destroy();
+			temp.Display.Controls.Size = UDim2.new(0.15,0,1,0);
+			temp.Display.Controls.Delete.Size = UDim2.new(1,0,1,0);
+			temp.Display.Value.Size = UDim2.new(0.55, 0, 1, 0);
+		else
+			local connection = nil;
+			temp['Display']['Controls']['Peek'].MouseButton1Click:Connect(function()
+				if temp.Size.Y.Offset > 24 then
+					temp:TweenSize(UDim2.new(1,0,0,24), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true, function()
+						for _, v in pairs(temp['Content']:GetChildren()) do
+							if v.ClassName ~= "UIListLayout" and v.Name ~= "PlaceholderResult" then
+								v:Destroy();
+							end
+						end
+						connection:Disconnect();
+						connection = nil;
+					end)
+				else
+					connection = temp['Content']['UIListLayout']:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+						temp:TweenSize(UDim2.new(1,0,0,29 + temp['Content']['UIListLayout'].AbsoluteContentSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+					end)
+					if Type == "Script" or Type == "ModuleScript" then
+						tble = functions[currentIndex]['Function'](v);
+					elseif Type == "table" then
+						tble = v;
+					end
+					createResults(temp['Content'], tble);
+				end
+			end)
+		end
 		temp['Display']['Controls']['Delete'].MouseButton1Click:Connect(function()
 			temp:Destroy();
 		end)
@@ -608,14 +650,19 @@ Input.Focused:Connect(function()
 	InputFocused = true;
 	updateList();
 end)
+
 Input.FocusLost:Connect(function(enterPressed)
 	InputFocused = false;
 	if enterPressed then
 		SearchBox:TweenSizeAndPosition(UDim2.new(0, 0, 0, 20), UDim2.new(0, 0, 0, -5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true, function() SearchBox.Visible = false end);
-		--TODO(PneumaOfficial): Create Search
-		print(currentobj)
-		if not currentobj then return end
-		local tble = functions[currentIndex]['Function'](currentobj);
+		
+		local tble = {};
+		if currentIndex == "getrenv" or currentIndex == "getgenv" then
+			tble = functions[currentIndex]['Function']();
+		else
+			if not currentobj then return end
+			tble = functions[currentIndex]['Function'](currentobj);
+		end
 		createResults(Content_2, tble);
 	end
 end)
@@ -623,8 +670,8 @@ end)
 UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 	Results.Size = UDim2.new(1,-4,0, 27 + UIListLayout.AbsoluteContentSize.Y);
 	SearchBox.Size = UDim2.new(0,200,0,32 + UIListLayout.AbsoluteContentSize.Y);
-	Content.CanvasSize = UDim2.new(0,0,1,0);
-	
+	Content.CanvasSize = UDim2.new(0,0,0,0);
+
 	if UIListLayout.AbsoluteContentSize.Y > 200 then
 		Results.Size = UDim2.new(1,-4,0,200);
 		SearchBox.Size = UDim2.new(0,200,0,227);
@@ -633,7 +680,7 @@ UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 	if UIListLayout.AbsoluteContentSize.Y < 40 then
 		Results.Size = UDim2.new(1,-4,0,40);
 		SearchBox.Size = UDim2.new(0,200,0,67);
-		Content.CanvasSize = UDim2.new(0,0,1,0);
+		Content.CanvasSize = UDim2.new(0,0,0,0);
 	end
 end)
 
@@ -672,10 +719,45 @@ local function rePosSize()
 	ToolTip.Position = UDim2.new(0, mouse.X + 20, 0, mouse.Y);
 end
 
+for i, v in pairs(functions) do
+	local temp = container.Option:Clone();
+	temp.Parent = container;
+	temp.Text = i;
+	temp.Visible = true;
+	temp.Name = i;
+	
+	temp.MouseButton1Click:Connect(function()
+		ToggleModes();
+		currentIndex = temp.Name;
+		label.Text = "Environment Peeker <font size='10'>".. currentIndex .."</font>"
+		local tble = {};
+		if currentIndex == "getrenv" or currentIndex == "getgenv" then
+			tble = functions[currentIndex]['Function']();
+		else
+			if not currentobj then return end
+			tble = functions[currentIndex]['Function'](currentobj);
+		end
+		createResults(Content_2, tble);
+	end)
+	local rect = getRect(temp);
+	local wasInside = false;
+	mouse.Move:Connect(function()
+		if rect.IsInside(Vector2.new(mouse.X, mouse.Y)) then
+			if not modes.Visible or searchRect.IsInside(Vector2.new(mouse.X, mouse.Y)) then return end
+			wasInside = true;
+			tooltip.Text = functions[temp.Name]['Description'];
+			tooltip.Visible = true;
+		elseif wasInside then
+			tooltip.Visible = false;
+			wasInside = false;
+		end
+	end)
+end 
+
 ToolTip:GetPropertyChangedSignal("Text"):Connect(rePosSize);
 ToolTip:GetPropertyChangedSignal("Visible"):Connect(rePosSize);
 
-local function mouseMoveFunctions()
-	rePosSize();
-end
-
+createResults(Content_2, functions[currentIndex]['Function']())
+UIListLayout_2:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+	Content_2.CanvasSize = UDim2.new(0,0,0,UIListLayout_2.AbsoluteContentSize.Y + 10)
+end)
